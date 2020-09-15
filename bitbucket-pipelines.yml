@@ -1,0 +1,81 @@
+image: atlassian/default-image:2
+pipelines:
+  default:
+    - step:
+        name: Build
+        script:
+          - make docker-build-project-name docker-export-project-name
+        artifacts:
+          - ecommerce-project-name.docker
+        services:
+          - docker
+        caches:
+          - docker
+    - step:
+        name: Unit tests
+        script:
+          - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+          - make run-unit-tests VERSION=latest
+        artifacts:
+          - app/coverage/**
+        services:
+          - docker
+    - step:
+        name: Static analysis
+        script:
+          - make run-code-analysis
+        services:
+          - docker
+    - step:
+        name: E2e tests
+        script:
+          - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+          - make run-e2e-tests VERSION=latest
+        services:
+          - docker
+  tags:
+    "*":
+      - step:
+          name: Build
+          script:
+            - make docker-build-project-name docker-export-project-name
+          artifacts:
+            - ecommerce-project-name.docker
+          services:
+            - docker
+          caches:
+            - docker
+      - step:
+          name: Unit tests
+          script:
+            - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+            - make run-unit-tests VERSION=latest
+          artifacts:
+            - app/coverage/**
+          services:
+            - docker
+      - step:
+          name: Static analysis
+          script:
+            - make run-code-analysis
+          services:
+            - docker
+      - step:
+          name: E2e tests
+          script:
+            - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+            - make run-e2e-tests VERSION=latest
+          services:
+            - docker
+      - step:
+          name: Push to ECR
+          script:
+            - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+            - make docker-login
+            - make docker-package-project-name docker-publish-project-name VERSION="$BITBUCKET_TAG"
+          services:
+            - docker
+definitions:
+  services:
+    docker:
+      memory: 2048

@@ -1,0 +1,11 @@
+image:
+  # ECR Repository
+  repository: 
+  pullPolicy: Always
+  tag: latest
+secret:
+  name: secret
+configmap:
+  name: configmap-migration
+resources: {}
+restartPolicy: OnFailure

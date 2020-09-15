@@ -1,0 +1,38 @@
+{
+  "plans": [
+  {
+    "name": "generic plan",
+    "description": "generic description",
+    "externalId": "1",
+    "additionalInfo": {},
+    "active": 1,
+    "externalFamily": "EXTERNAL",
+    "billingRules":[
+      {
+        "description": "generic billing rule",
+        "productId": 1,
+        "type": "RECURRING",
+        "recurringBillingRule":{
+          "usageType":"METERED",
+          "interval": "MONTH",
+          "intervalCount":1
+      },
+        "tags": "xyz",
+        "trialPeriodDays": 30,
+        "additionalInfo": {},
+        "active":1
+        }
+    ]
+
+}
+],
+
+"familyPlans": [
+  {
+    "name": "generic family plan",
+    "externalId": "EXTERNAL",
+    "additionalInfo": {},
+    "accountId": 1,
+    "active": 1
+  }
+]}

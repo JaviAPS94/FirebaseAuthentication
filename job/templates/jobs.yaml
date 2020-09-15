@@ -1,0 +1,23 @@
+# job.yaml
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrations
+spec:
+  completions: 1
+  template:
+    spec:
+      containers:
+        - name: migrations
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["npm", "run", "typeorm", "migration:run"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              name: {{ .Values.configmap.name }}
+          - secretRef:
+              name: {{ .Values.secret.name }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      restartPolicy: {{ .Values.restartPolicy }}
