@@ -4,9 +4,9 @@ pipelines:
     - step:
         name: Build
         script:
-          - make docker-build-project-name docker-export-project-name
+          - make docker-build-authentication-v2 docker-export-authentication-v2
         artifacts:
-          - ecommerce-project-name.docker
+          - ecommerce-authentication-v2.docker
         services:
           - docker
         caches:
@@ -14,7 +14,7 @@ pipelines:
     - step:
         name: Unit tests
         script:
-          - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+          - make docker-import-authentication-v2 INPUTFILE_PATH=../ecommerce-authentication-v2.docker
           - make run-unit-tests VERSION=latest
         artifacts:
           - app/coverage/**
@@ -29,7 +29,7 @@ pipelines:
     - step:
         name: E2e tests
         script:
-          - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+          - make docker-import-authentication-v2 INPUTFILE_PATH=../ecommerce-authentication-v2.docker
           - make run-e2e-tests VERSION=latest
         services:
           - docker
@@ -38,9 +38,9 @@ pipelines:
       - step:
           name: Build
           script:
-            - make docker-build-project-name docker-export-project-name
+            - make docker-build-authentication-v2 docker-export-authentication-v2
           artifacts:
-            - ecommerce-project-name.docker
+            - ecommerce-authentication-v2.docker
           services:
             - docker
           caches:
@@ -48,7 +48,7 @@ pipelines:
       - step:
           name: Unit tests
           script:
-            - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+            - make docker-import-authentication-v2 INPUTFILE_PATH=../ecommerce-authentication-v2.docker
             - make run-unit-tests VERSION=latest
           artifacts:
             - app/coverage/**
@@ -63,16 +63,16 @@ pipelines:
       - step:
           name: E2e tests
           script:
-            - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+            - make docker-import-authentication-v2 INPUTFILE_PATH=../ecommerce-authentication-v2.docker
             - make run-e2e-tests VERSION=latest
           services:
             - docker
       - step:
           name: Push to ECR
           script:
-            - make docker-import-project-name INPUTFILE_PATH=../ecommerce-project-name.docker
+            - make docker-import-authentication-v2 INPUTFILE_PATH=../ecommerce-authentication-v2.docker
             - make docker-login
-            - make docker-package-project-name docker-publish-project-name VERSION="$BITBUCKET_TAG"
+            - make docker-package-authentication-v2 docker-publish-authentication-v2 VERSION="$BITBUCKET_TAG"
           services:
             - docker
 definitions:

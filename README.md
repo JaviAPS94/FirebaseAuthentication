@@ -2,7 +2,7 @@
 
 ## Arquitectura
 
-Para este Boilerplate se ha utilizado un modelo de tres capas: controladores, servicios y persistencia.
+Para este microservico de autenticación se ha utilizado un modelo de tres capas: controladores, servicios y persistencia.
 
 ![Architecture](./docs/boilerplate-diagram.svg)
 
