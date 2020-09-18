@@ -1,17 +1,17 @@
 const ORMConfig = {
    "type": "mysql",
-   "host": process.env.DB_HOST,
-   "port": process.env.DB_PORT,
-   "username": process.env.DB_USERNAME,
-   "password": process.env.MYSQL_PASSWORD,
-   "database": process.env.MYSQL_DATABASE,
+   "host": "localhost",
+   "port": "3307",
+   "username": "root",
+   "password": "1GW6XT915UNonmhi6PVWxRZzSKcsLH",
+   "database": "ecommerce-ms-authentication",
    "synchronize": false,
    "logging": false,
    "entities": [
-      process.env.ENTITY_PATH
+      "src/entity/**/*.ts"
    ],
    "migrations": [
-      process.env.MIGRATION_PATH 
+      "src/migration/**/*.ts" 
    ],
    "subscribers": [
       "src/subscriber/**/*.ts"

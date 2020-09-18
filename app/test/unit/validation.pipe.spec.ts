@@ -1,6 +1,6 @@
 import { ValidationPipe } from '../../src/validation.pipe';
 import { DummyDto } from './dummy.dto';
-import { BadRequestException } from 'test/e2e/plans/node_modules/@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
 describe('ValidationPipe', () => {
     let validationPipe: ValidationPipe;

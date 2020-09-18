@@ -1,5 +1,4 @@
 import { HealthModule } from './health/health.module';
-import { PlanModule } from './plans/plan.module';
 import { EntityManagerWrapperService } from './utils/entity-manager-wrapper.service';
 import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';

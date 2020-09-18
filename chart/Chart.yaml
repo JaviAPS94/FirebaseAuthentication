@@ -1,8 +1,8 @@
 apiVersion: v2
 # Chart Name
-name: 
+name: ecommerce-authentication
 # Chart Description
-description: A Helm chart for ms for Kubernetes
+description: A Helm chart for ecommerce-authentication for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #

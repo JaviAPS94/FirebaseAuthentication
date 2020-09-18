@@ -13,16 +13,16 @@ ROOT_PATH="${CURRENT_PATH}/.."
 
 ##############################
 
-AUTHENTICATION_V2_CONTAINER_NAME=authentication-v2
+AUTHENTICATION_CONTAINER_NAME=authentication
 DB_CONTAINER_NAME=db
 MYSQL_IMAGE=mysql:5.7
-NETWORK_NAME=authentication-v2-network
+NETWORK_NAME=authentication-network
 
 ##############################
-function run_authentication_v2 {
+function run_authentication {
   local NETWORK_NAME=$1
-  local AUTHENTICATION_V2_CONTAINER_NAME=$2
-  local AUTHENTICATION_V2_IMAGE=$3
+  local AUTHENTICATION_CONTAINER_NAME=$2
+  local AUTHENTICATION_IMAGE=$3
 
   docker container run -d \
     --rm \
@@ -30,8 +30,8 @@ function run_authentication_v2 {
     --network ${NETWORK_NAME} \
     --env-file ${ROOT_PATH}/local/db-connection.env \
     --env-file ${ROOT_PATH}/local/run-app.env \
-    --name ${AUTHENTICATION_V2_CONTAINER_NAME} \
-    ${AUTHENTICATION_V2_IMAGE}
+    --name ${AUTHENTICATION_CONTAINER_NAME} \
+    ${AUTHENTICATION_IMAGE}
 }
 
 function run_db {
@@ -68,17 +68,17 @@ echo "[*] ACTION=${PARAM_ACTION}"
 
 case ${PARAM_ACTION} in
   "run")
-    AUTHENTICATION_V2_IMAGE=${2:?"Missing AUTHENTICATION_V2_IMAGE"}
+    AUTHENTICATION_IMAGE=${2:?"Missing AUTHENTICATION_IMAGE"}
 
     create_network "${NETWORK_NAME}"
-    run_authentication_v2 "${NETWORK_NAME}" "${AUTHENTICATION_V2_CONTAINER_NAME}" "${AUTHENTICATION_V2_IMAGE}"
+    run_authentication "${NETWORK_NAME}" "${AUTHENTICATION_CONTAINER_NAME}" "${AUTHENTICATION_IMAGE}"
   ;;
   "run-db")
     create_network "${NETWORK_NAME}"
     run_db "${NETWORK_NAME}" "${DB_CONTAINER_NAME}" "${MYSQL_IMAGE}"
   ;;
   "stop")
-    docker stop ${AUTHENTICATION_V2_CONTAINER_NAME} ${DB_CONTAINER_NAME}
+    docker stop ${AUTHENTICATION_CONTAINER_NAME} ${DB_CONTAINER_NAME}
   ;;
   *)
     echo "ERROR: unknown command"
