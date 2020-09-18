@@ -18,22 +18,22 @@ decrypt-secret:
 update-secret:
 	@./scripts/secrets_apply.sh "update" ${SOPS_KMS_ARN} ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY} ${ASSUMED_ROLE_ARN} ${SECRET_FILE_PATH}
 
-docker-build-project-name:
+docker-build-authentication:
 	@./scripts/docker_apply.sh "build" ${ECR_REPOSITORY} ${AUTHENTICATION_REPOSITORY_NAME} "docker/Dockerfile"
 
-docker-export-project-name:
+docker-export-authentication:
 	@./scripts/docker_apply.sh "export" ${ECR_REPOSITORY} ${AUTHENTICATION_REPOSITORY_NAME}
 
-docker-import-project-name:
+docker-import-authentication:
 	@./scripts/docker_apply.sh "import" ${INPUTFILE_PATH}
 
 docker-login:
 	@./scripts/docker_apply.sh "login" $(ECR_REPOSITORY) $(AWS_REGION) $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY)
 
-docker-package-project-name:
+docker-package-authentication:
 	@./scripts/docker_apply.sh "package" $(ECR_REPOSITORY) ${AUTHENTICATION_REPOSITORY_NAME} $(VERSION)
 
-docker-publish-project-name:
+docker-publish-authentication:
 	@./scripts/docker_apply.sh "publish" $(ECR_REPOSITORY) ${AUTHENTICATION_REPOSITORY_NAME} $(VERSION)
 
 local-run:
