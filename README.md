@@ -79,7 +79,7 @@ La carpeta test se encuentra en **/src**, y se dividen de acuerdo a su propósit
   ej:
 
   ```bash
-  make docker-build-authentication VERSION=latest
+  make docker-build-ms-authentication VERSION=latest
   ```
 
 - Para correr las pruebas e2e se utiliza el siguiente comando:

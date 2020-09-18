@@ -8,21 +8,21 @@ cd ${CURRENT_PATH}
 ##############################
 
 PARAM_ACTION=${1:?"Missing ACTION"}
-AUTHENTICATION_IMAGE=${2:?"Missing AUTHENTICATION_IMAGE"}
+MS_AUTHENTICATION_IMAGE=${2:?"Missing MS_AUTHENTICATION_IMAGE"}
 
 ROOT_PATH="${CURRENT_PATH}/.."
 
 ##############################
 
-AUTHENTICATION_CONTAINER_NAME=authentication-test
+MS_AUTHENTICATION_CONTAINER_NAME=ms-authentication-test
 NETWORK_NAME=testing-network
 DB_CONTAINER_NAME=db-test
 MYSQL_IMAGE=mysql:5.7
 
 ##############################
 function run_tests {
-  local AUTHENTICATION_CONTAINER_NAME=$1
-  local AUTHENTICATION_IMAGE=$2
+  local MS_AUTHENTICATION_CONTAINER_NAME=$1
+  local MS_AUTHENTICATION_IMAGE=$2
   local COMMAND=$3
 
   docker container run \
@@ -31,8 +31,8 @@ function run_tests {
     --network ${NETWORK_NAME} \
     -v ${ROOT_PATH}/app/coverage:/application/coverage/ \
     -v ${ROOT_PATH}/app/test:/application/test/ \
-    --name ${AUTHENTICATION_CONTAINER_NAME} \
-    ${AUTHENTICATION_IMAGE} \
+    --name ${MS_AUTHENTICATION_CONTAINER_NAME} \
+    ${MS_AUTHENTICATION_IMAGE} \
     ${COMMAND}
 }
 
@@ -72,7 +72,7 @@ case ${PARAM_ACTION} in
   "run-unit")
     echo "[*] Running unit tests"
     create_network "${NETWORK_NAME}"
-    run_tests "${AUTHENTICATION_CONTAINER_NAME}" "${AUTHENTICATION_IMAGE}" "npm test"
+    run_tests "${MS_AUTHENTICATION_CONTAINER_NAME}" "${MS_AUTHENTICATION_IMAGE}" "npm test"
 
     echo "[*] Finished unit tests"
   ;;
@@ -81,7 +81,7 @@ case ${PARAM_ACTION} in
     create_network "${NETWORK_NAME}"
     run_db "${NETWORK_NAME}" "${DB_CONTAINER_NAME}" "${MYSQL_IMAGE}"
     sleep 10
-    run_tests "${AUTHENTICATION_CONTAINER_NAME}" "${AUTHENTICATION_IMAGE}" "npm run test:e2e"
+    run_tests "${MS_AUTHENTICATION_CONTAINER_NAME}" "${MS_AUTHENTICATION_IMAGE}" "npm run test:e2e"
     docker stop ${DB_CONTAINER_NAME}
 
     echo "[*] Finished e2e tests"
