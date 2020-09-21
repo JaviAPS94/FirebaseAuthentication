@@ -21,8 +21,8 @@ export class AuthService {
   async validateUser(userId: number, secret: string, connection: EntityManagerWrapperService): Promise<any> {
     const user = await this.usersService.findUserById(userId, connection);
     if (user && await bcrypt.compare(secret, user.secret)) {
-      const { secret, ...result } = user;
-      return result;
+      delete user.secret;
+      return user;
     }
 
     return null;
@@ -36,8 +36,8 @@ export class AuthService {
   async validateUserById(userId: number, connection: EntityManagerWrapperService): Promise<any> {
     const user = await this.usersService.findUserById(userId, connection);
     if (user) {
-      const { secret, ...result } = user;
-      return result;
+      delete user.secret;
+      return user;
     }
   }
 

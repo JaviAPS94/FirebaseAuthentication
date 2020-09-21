@@ -36,5 +36,12 @@ export const mockUsers = {
         "useExternalIds": true
       }
     }
+  ],
+  usersLogin: [
+    {
+      client_id: "4",
+      client_secret: "inmedical.dev@2020",
+      grant_type: "client_credentials"
+    }
   ]
 };
