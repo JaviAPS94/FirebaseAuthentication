@@ -38,6 +38,15 @@ describe('AuthService', () => {
     expect(authService).toBeDefined();
   });
 
+  it('should return null when user is not validated', async () => {
+    mockFindByUserIdReturnedValue();
+    const userId = 1;
+    const secret = "inmedical.dev@2021";
+    const wrapperService = new EntityManagerWrapperService();
+    const result = await authService.validateUser(userId, secret, wrapperService);
+    expect(result).toEqual(null);
+  });
+
   it('should validate a user with secret', async () => {
     mockFindByUserIdReturnedValue();
     const userId = 1;
@@ -46,15 +55,6 @@ describe('AuthService', () => {
     const wrapperService = new EntityManagerWrapperService();
     const result = await authService.validateUser(userId, secret, wrapperService);
     expect(result).toEqual(expectedResult);
-  });
-
-  it('should return null when user is not validated', async () => {
-    mockFindByUserIdReturnedValue();
-    const userId = 1;
-    const secret = "inmedical.dev@2021";
-    const wrapperService = new EntityManagerWrapperService();
-    const result = await authService.validateUser(userId, secret, wrapperService);
-    expect(result).toEqual(null);
   });
 
   it('should validate a user by userId', async () => {
