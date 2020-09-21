@@ -7,7 +7,6 @@ import { JwtStrategy } from '../../../../src/auth/strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../../../../src/users/users.module';
-import { User } from '../../../../src/entity/User';
 import { Oauth2Strategy } from '../../../../src/auth/strategies/oauth2.strategy';
 
 describe('Oauth Strategy', () => {
