@@ -8,20 +8,20 @@ cd ${CURRENT_PATH}
 ##############################
 
 PARAM_ACTION=${1:?"Missing ACTION"}
-PROJECT_NAME_IMAGE=${2:?"Missing PROJECT_NAME_IMAGE"}
+MS_AUTHENTICATION_IMAGE=${2:?"Missing MS_AUTHENTICATION_IMAGE"}
 MIGRATION_COMMAND=${3:?"Missing MIGRATION_COMMAND"}
 
 ROOT_PATH="${CURRENT_PATH}/.."
 
 ##############################
 
-PROJECT_NAME_CONTAINER_NAME=project-name-migration
-NETWORK_NAME=project-name-network
+MS_AUTHENTICATION_CONTAINER_NAME=ms-authentication-migration
+NETWORK_NAME=ms-authentication-network
 
 ##############################
 function run_migrations {
-  local PROJECT_NAME_CONTAINER_NAME=$1
-  local PROJECT_NAME_IMAGE=$2
+  local MS_AUTHENTICATION_CONTAINER_NAME=$1
+  local MS_AUTHENTICATION_IMAGE=$2
   local COMMAND=$3
   local NETWORK_NAME=$4
 
@@ -32,8 +32,8 @@ function run_migrations {
     --env-file ${ROOT_PATH}/local/db-connection.env \
     --env-file ${ROOT_PATH}/local/run-migrations.env \
     -v ${ROOT_PATH}/app/src/migration:/application/src/migration/ \
-    --name ${PROJECT_NAME_CONTAINER_NAME} \
-    ${PROJECT_NAME_IMAGE} \
+    --name ${MS_AUTHENTICATION_CONTAINER_NAME} \
+    ${MS_AUTHENTICATION_IMAGE} \
     ${COMMAND}
 }
 #################################
@@ -45,7 +45,7 @@ echo "[*] ACTION=${PARAM_ACTION}"
 case ${PARAM_ACTION} in
   "run")
     echo "[*] Running migration"
-    run_migrations "${PROJECT_NAME_CONTAINER_NAME}" "${PROJECT_NAME_IMAGE}" "npm run typeorm migration:${MIGRATION_COMMAND}" "${NETWORK_NAME}"
+    run_migrations "${MS_AUTHENTICATION_CONTAINER_NAME}" "${MS_AUTHENTICATION_IMAGE}" "npm run typeorm migration:${MIGRATION_COMMAND}" "${NETWORK_NAME}"
 
     echo "[*] Finished migration"
   ;;

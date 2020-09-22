@@ -1,4 +1,4 @@
-import { Injectable } from 'test/e2e/plans/node_modules/@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
 
 @Injectable()

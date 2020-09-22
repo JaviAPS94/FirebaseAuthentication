@@ -1,4 +1,4 @@
-import { Controller, Get , Injectable } from 'test/e2e/plans/node_modules/@nestjs/common';
+import { Controller, Get , Injectable } from '@nestjs/common';
 import {  HealthCheckService , HealthCheck} from '@nestjs/terminus';
 import { HealthcheckIndicator } from './health.service';
 

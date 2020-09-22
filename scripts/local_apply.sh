@@ -13,16 +13,16 @@ ROOT_PATH="${CURRENT_PATH}/.."
 
 ##############################
 
-PROJECT_NAME_CONTAINER_NAME=project-name
+MS_AUTHENTICATION_CONTAINER_NAME=ms-authentication
 DB_CONTAINER_NAME=db
 MYSQL_IMAGE=mysql:5.7
-NETWORK_NAME=project-name-network
+NETWORK_NAME=ms-authentication-network
 
 ##############################
-function run_project_name {
+function run_ms_authentication {
   local NETWORK_NAME=$1
-  local PROJECT_NAME_CONTAINER_NAME=$2
-  local PROJECT_NAME_IMAGE=$3
+  local MS_AUTHENTICATION_CONTAINER_NAME=$2
+  local MS_AUTHENTICATION_IMAGE=$3
 
   docker container run -d \
     --rm \
@@ -30,8 +30,8 @@ function run_project_name {
     --network ${NETWORK_NAME} \
     --env-file ${ROOT_PATH}/local/db-connection.env \
     --env-file ${ROOT_PATH}/local/run-app.env \
-    --name ${PROJECT_NAME_CONTAINER_NAME} \
-    ${PROJECT_NAME_IMAGE}
+    --name ${MS_AUTHENTICATION_CONTAINER_NAME} \
+    ${MS_AUTHENTICATION_IMAGE}
 }
 
 function run_db {
@@ -68,17 +68,17 @@ echo "[*] ACTION=${PARAM_ACTION}"
 
 case ${PARAM_ACTION} in
   "run")
-    PROJECT_NAME_IMAGE=${2:?"Missing PROJECT_NAME_IMAGE"}
+    MS_AUTHENTICATION_IMAGE=${2:?"Missing MS_AUTHENTICATION_IMAGE"}
 
     create_network "${NETWORK_NAME}"
-    run_project_name "${NETWORK_NAME}" "${PROJECT_NAME_CONTAINER_NAME}" "${PROJECT_NAME_IMAGE}"
+    run_ms_authentication "${NETWORK_NAME}" "${MS_AUTHENTICATION_CONTAINER_NAME}" "${MS_AUTHENTICATION_IMAGE}"
   ;;
   "run-db")
     create_network "${NETWORK_NAME}"
     run_db "${NETWORK_NAME}" "${DB_CONTAINER_NAME}" "${MYSQL_IMAGE}"
   ;;
   "stop")
-    docker stop ${PROJECT_NAME_CONTAINER_NAME} ${DB_CONTAINER_NAME}
+    docker stop ${MS_AUTHENTICATION_CONTAINER_NAME} ${DB_CONTAINER_NAME}
   ;;
   *)
     echo "ERROR: unknown command"

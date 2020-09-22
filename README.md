@@ -2,7 +2,7 @@
 
 ## Arquitectura
 
-Para este Boilerplate se ha utilizado un modelo de tres capas: controladores, servicios y persistencia.
+Para este microservico de autenticación se ha utilizado un modelo de tres capas: controladores, servicios y persistencia.
 
 ![Architecture](./docs/boilerplate-diagram.svg)
 
@@ -79,7 +79,7 @@ La carpeta test se encuentra en **/src**, y se dividen de acuerdo a su propósit
   ej:
 
   ```bash
-  make docker-build-project-name VERSION=latest
+  make docker-build-ms-authentication VERSION=latest
   ```
 
 - Para correr las pruebas e2e se utiliza el siguiente comando:

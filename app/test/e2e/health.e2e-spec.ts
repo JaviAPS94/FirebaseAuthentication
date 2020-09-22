@@ -1,6 +1,6 @@
-import { Test, TestingModule } from 'test/e2e/plans/node_modules/@nestjs/testing';
-import { INestApplication } from 'test/e2e/plans/node_modules/@nestjs/common';
-import * as request from 'test/e2e/plans/node_modules/supertest';
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
 import { HealthModule } from '../../src/health/health.module';
 
 describe('AppController (e2e)', () => {

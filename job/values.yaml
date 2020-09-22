@@ -1,6 +1,6 @@
 image:
   # ECR Repository
-  repository: 
+  repository: 224234462137.dkr.ecr.us-east-1.amazonaws.com/ecommerce-ms-authentication
   pullPolicy: Always
   tag: latest
 secret:

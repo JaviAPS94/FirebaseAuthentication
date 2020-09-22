@@ -1,4 +1,4 @@
-import { Test, TestingModule } from 'test/e2e/plans/node_modules/@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
 import {HealthcheckIndicator}  from './health.service';
 import { TerminusModule } from '@nestjs/terminus';
