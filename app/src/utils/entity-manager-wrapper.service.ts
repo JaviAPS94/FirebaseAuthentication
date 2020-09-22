@@ -10,4 +10,8 @@ export class EntityManagerWrapperService {
   public async findUserById(sentence: {}) {
     return await this.connection.getRepository(User).findOne(sentence);
   }
+
+  public async save(entity: any) {
+    return await this.connection.save(entity);
+  }
 }

@@ -43,4 +43,11 @@ describe('Auth Controller (e2e)', () => {
       .expect(HttpStatus.UNAUTHORIZED)
     return result;
   });
+
+  it('Api User (POST)', () => {
+    const result = request(app.getHttpServer())
+      .post('/auth/user').send(mockUsers.usersCreate[0])
+      .expect(HttpStatus.CREATED)
+    return result;
+  });
 });

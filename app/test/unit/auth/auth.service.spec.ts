@@ -81,6 +81,15 @@ describe('AuthService', () => {
     expect(result).toHaveProperty('accessToken');
   });
 
+  it('should register user in db', async () => {
+    mockCreateUser();
+    const dataToCreate = mockUsers.usersCreate[0];
+    const expectedResult = mockUsers.users[0];
+
+    const result =  await authService.registerUser(dataToCreate);
+    expect(result).toEqual(expectedResult);
+  });
+
   const mockFindByUserIdReturnedValue = () => {
     const findByUserId = EntityManagerWrapperService.prototype.findUserById = jest.fn();
     findByUserId.mockReturnValue(mockUsers.users[0]);
@@ -89,5 +98,11 @@ describe('AuthService', () => {
   const mockFindByUserIdEmpty = () => {
     const findByUserId = EntityManagerWrapperService.prototype.findUserById = jest.fn();
     findByUserId.mockReturnValue({});
+  };
+
+  const mockCreateUser = () => {
+    const create = AuthService.prototype.registerUser = jest.fn();
+    return create
+    .mockResolvedValueOnce(mockUsers.users[0]);
   };
 });

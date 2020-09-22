@@ -1,11 +1,15 @@
 import {
+  Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Post,
   Request,
   UseGuards
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { UserDto } from './dto/user.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Oauth2AuthGuard } from './guards/oauth2.guard';
 
@@ -25,6 +29,19 @@ export class AuthController {
     const user: any = await this.authService.getValidatedUserById(req.user.id);
     if (user) {
       return user;
+    }
+  }
+
+  @Post('user')
+  async create(@Body() userDto: UserDto) {
+    try {
+      return await this.authService.registerUser(userDto);
+    }
+    catch (error) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'The input data is invalid ' + error.message,
+      }, HttpStatus.FORBIDDEN);
     }
   }
 }

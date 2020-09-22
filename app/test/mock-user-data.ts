@@ -43,5 +43,16 @@ export const mockUsers = {
       client_secret: "inmedical.dev@2020",
       grant_type: "client_credentials"
     }
+  ],
+  usersCreate: [
+    {
+      name: "inmedical",
+      secret: "inmedical.dev@2020",
+      additionalInfo: {
+        "account": 10,
+        "country": 1,
+        "useExternalIds": true
+      }
+    }
   ]
 };

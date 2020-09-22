@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '../../src/entity/User';
 import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrapper.service';
 
 @Injectable()
@@ -10,12 +11,16 @@ export class UsersService {
       });
     }
     catch (error) {
-      console.log("ERROR: User Find error:" + error.message);
       throw new Error("User Find error: " + error.message);
     }
   }
 
-  // public async save(user: DeepPartial<User>): Promise<any> {
-  //   return this.userRepository.save(user);
-  // }
+  public async save(user: User, connection: EntityManagerWrapperService): Promise<any> {
+    try {
+      const userReturned = await connection.save(user);
+      return userReturned;
+    } catch (error) {
+      throw new Error('User Database Error: ' + error.message);
+    }
+  }
 }

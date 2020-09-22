@@ -6,11 +6,8 @@ import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrap
 
 import { User } from '../entity/User';
 import { UsersService } from '../users/users.service';
+import { UserDto } from './dto/user.dto';
 
-type NewUser = {
-  name: string,
-  secret: string
-}
 @Injectable()
 export class AuthService {
   constructor(
@@ -48,8 +45,11 @@ export class AuthService {
     };
   }
 
-  // async registerUser(user: NewUser) {
-  //   user.secret = await bcrypt.hash(user.secret, 10);
-  //   return await this.usersService.save(user);
-  // }
+  async registerUser(user: UserDto) {
+    const userToCreate = new User();
+    Object.assign(userToCreate, user);
+    const wraperService = new EntityManagerWrapperService(getManager());
+    userToCreate.secret = await bcrypt.hash(user.secret, 10);
+    return await this.usersService.save(userToCreate, wraperService);
+  }
 }
