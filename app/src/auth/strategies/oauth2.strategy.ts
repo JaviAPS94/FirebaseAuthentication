@@ -1,8 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-oauth2-client-password';
-import { EntityManagerWrapperService } from "../../../src/utils/entity-manager-wrapper.service";
-import { getManager } from "typeorm";
 import { AuthService } from '../auth.service';
 
 @Injectable()

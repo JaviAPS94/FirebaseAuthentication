@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { EntityManager, getManager } from 'typeorm';
+import { getManager } from 'typeorm';
 import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrapper.service';
 
 import { User } from '../entity/User';
@@ -55,7 +55,7 @@ export class AuthService {
     return await this.saveUser(user, wraperService);
   }
 
-  async saveUser (user: UserDto, connection: EntityManagerWrapperService) {
+  async saveUser(user: UserDto, connection: EntityManagerWrapperService) {
     const userToCreate = new User();
     Object.assign(userToCreate, user);
     userToCreate.secret = await bcrypt.hash(user.secret, 10);
