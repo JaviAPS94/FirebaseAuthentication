@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { getManager } from 'typeorm';
+import { EntityManager, getManager } from 'typeorm';
 import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrapper.service';
 
 import { User } from '../entity/User';
@@ -14,6 +14,11 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService
   ) { }
+
+  async getValidatedUser(userId: number, secret: string): Promise<any> {
+    const wraperService = new EntityManagerWrapperService(getManager());
+    return await this.validateUser(userId, secret, wraperService);
+  }
 
   async validateUser(userId: number, secret: string, connection: EntityManagerWrapperService): Promise<any> {
     const user = await this.usersService.findUserById(userId, connection);
@@ -45,11 +50,15 @@ export class AuthService {
     };
   }
 
-  async registerUser(user: UserDto) {
+  async getUserRegistered(user: UserDto) {
+    const wraperService = new EntityManagerWrapperService(getManager());
+    return await this.saveUser(user, wraperService);
+  }
+
+  async saveUser (user: UserDto, connection: EntityManagerWrapperService) {
     const userToCreate = new User();
     Object.assign(userToCreate, user);
-    const wraperService = new EntityManagerWrapperService(getManager());
     userToCreate.secret = await bcrypt.hash(user.secret, 10);
-    return await this.usersService.save(userToCreate, wraperService);
+    return await this.usersService.save(userToCreate, connection);
   }
 }

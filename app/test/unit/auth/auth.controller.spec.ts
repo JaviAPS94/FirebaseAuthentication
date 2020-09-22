@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../../../src/users/users.module';
 import { User } from '../../../src/entity/User';
+import { UserDto } from '../../../src/auth/dto/user.dto';
 
 describe('Auth Controller', () => {
   let authController: AuthController;
@@ -53,5 +54,37 @@ describe('Auth Controller', () => {
     };
     const returnedValue = await authController.validateToken(requestObject);
     expect(returnedValue).toEqual(user);
+  });
+
+  it('POST should return 201 when post data is Ok', async () => {
+    const createUser = AuthService.prototype.getUserRegistered = jest.fn();
+    createUser.mockReturnValue(mockUsers.usersCreate[0]);
+    const userDto = new UserDto();
+    Object.assign(userDto, mockUsers.usersCreate);
+
+    const returnedValue = await authController.create(userDto);
+    expect(createUser).toHaveBeenCalled();
+    expect(returnedValue).toEqual(mockUsers.usersCreate[0]);
+  });
+
+  it('POST should return 403 when data to post is invalid', async () => {
+    const createUser = AuthService.prototype.saveUser = jest.fn();
+    createUser.mockImplementation(() => {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'The input data is invalid',
+      }, HttpStatus.FORBIDDEN);
+    });
+    const userDto = new UserDto();
+    Object.assign(userDto, mockUsers.usersCreate);
+
+    try {
+      await authController.create(userDto);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.response.error).toContain('The input data is invalid');
+      expect(error.status).toBe(HttpStatus.FORBIDDEN);
+    }
+
   });
 });

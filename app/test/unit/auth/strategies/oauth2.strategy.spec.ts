@@ -32,8 +32,8 @@ describe('Oauth Strategy', () => {
   });
 
   it('should return a user', async () => {
-    const validate = Oauth2Strategy.prototype.validate = jest.fn();
-    validate.mockReturnValue(mockUsers.usersResult[0]);
+    const getValidatedUser = AuthService.prototype.getValidatedUser = jest.fn();
+    getValidatedUser.mockReturnValue(mockUsers.usersResult[0]);
     const userId = 1;
     const userSecret = "inmedical.dev@2020";
     const expectedResult = mockUsers.usersResult[0];

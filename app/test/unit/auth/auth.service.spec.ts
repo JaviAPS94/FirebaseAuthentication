@@ -82,11 +82,11 @@ describe('AuthService', () => {
   });
 
   it('should register user in db', async () => {
-    mockCreateUser();
+    mockCreateUserSuccessful();
     const dataToCreate = mockUsers.usersCreate[0];
     const expectedResult = mockUsers.users[0];
-
-    const result =  await authService.registerUser(dataToCreate);
+    const wrapperService = new EntityManagerWrapperService();
+    const result =  await authService.saveUser(dataToCreate, wrapperService);
     expect(result).toEqual(expectedResult);
   });
 
@@ -100,9 +100,11 @@ describe('AuthService', () => {
     findByUserId.mockReturnValue({});
   };
 
-  const mockCreateUser = () => {
-    const create = AuthService.prototype.registerUser = jest.fn();
-    return create
-    .mockResolvedValueOnce(mockUsers.users[0]);
+  const mockCreateUserSuccessful = () => {
+    const returnedUser = new User();
+    Object.assign(returnedUser, mockUsers.users[0]);
+  
+    const save = EntityManagerWrapperService.prototype.save = jest.fn();
+    save.mockReturnValue(returnedUser);
   };
 });

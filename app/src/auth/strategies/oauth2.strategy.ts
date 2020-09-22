@@ -12,8 +12,7 @@ export class Oauth2Strategy extends PassportStrategy(Strategy) {
   }
 
   async validate(userId: number, userSecret: string): Promise<any> {
-    const wraperService = new EntityManagerWrapperService(getManager());
-    const user = await this.authService.validateUser(userId, userSecret, wraperService);
+    const user = await this.authService.getValidatedUser(userId, userSecret);
     if (!user) {
       throw new UnauthorizedException();
     }

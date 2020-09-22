@@ -35,7 +35,7 @@ export class AuthController {
   @Post('user')
   async create(@Body() userDto: UserDto) {
     try {
-      return await this.authService.registerUser(userDto);
+      return await this.authService.getUserRegistered(userDto);
     }
     catch (error) {
       throw new HttpException({
