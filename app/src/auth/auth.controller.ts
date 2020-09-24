@@ -18,8 +18,7 @@ import { FirebaseAdminSDK, FIREBASE_ADMIN_INJECT } from '@tfarras/nestjs-firebas
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService,
-    @Inject(FIREBASE_ADMIN_INJECT) private firebaseAdmin: FirebaseAdminSDK) { }
+  constructor(private readonly authService: AuthService) { }
 
   @UseGuards(Oauth2AuthGuard)
   @Post('login')

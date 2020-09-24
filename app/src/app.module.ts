@@ -15,7 +15,7 @@ import { UsersModule } from './users/users.module';
           privateKey: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
           clientEmail: process.env.CLIENT_EMAIL,
         }),
-        databaseURL: "https://inmedical-dev.firebaseio.com"
+        databaseURL: process.env.DATABASE_URL
       })
     }),
   ],

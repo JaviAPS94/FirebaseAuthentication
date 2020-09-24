@@ -9,6 +9,7 @@ import { Oauth2Strategy } from '../../../src/auth/strategies/oauth2.strategy';
 import { EntityManagerWrapperService } from '../../../src/utils/entity-manager-wrapper.service';
 import { mockUsers } from '../../mock-user-data';
 import { User } from '../../../src/entity/User';
+import { FirebaseStrategy } from '../../../src/auth/strategies/firebase.strategy';
 
 jest.mock('../../../src/utils/entity-manager-wrapper.service');
 
@@ -28,7 +29,7 @@ describe('AuthService', () => {
         })
       ],
       controllers: [AuthController],
-      providers: [AuthService, Oauth2Strategy, JwtStrategy]
+      providers: [AuthService, Oauth2Strategy, JwtStrategy, FirebaseStrategy]
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
