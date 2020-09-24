@@ -31,7 +31,7 @@ function run_tests {
     --network ${NETWORK_NAME} \
     -v ${ROOT_PATH}/app/coverage:/application/coverage/ \
     -v ${ROOT_PATH}/app/test:/application/test/ \
-    --env-file ${ROOT_PATH}/local/run-app.env \
+    --env-file ${ROOT_PATH}/local/run-app-test.env \
     --name ${MS_AUTHENTICATION_CONTAINER_NAME} \
     ${MS_AUTHENTICATION_IMAGE} \
     ${COMMAND}
