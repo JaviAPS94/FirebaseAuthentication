@@ -4,7 +4,6 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Inject,
   Post,
   Request,
   UseGuards
@@ -14,7 +13,6 @@ import { UserDto } from './dto/user.dto';
 import { FirebaseAuthGuard } from './guards/firebase.guards';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Oauth2AuthGuard } from './guards/oauth2.guard';
-import { FirebaseAdminSDK, FIREBASE_ADMIN_INJECT } from '@tfarras/nestjs-firebase-admin';
 
 @Controller('auth')
 export class AuthController {
