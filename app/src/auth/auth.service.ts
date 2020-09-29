@@ -3,10 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { getManager } from 'typeorm';
 import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrapper.service';
-
 import { User } from '../entity/User';
 import { UsersService } from '../users/users.service';
 import { UserDto } from './dto/user.dto';
+
 
 @Injectable()
 export class AuthService {

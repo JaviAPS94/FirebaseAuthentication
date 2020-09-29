@@ -68,7 +68,7 @@ describe('Auth Controller', () => {
   });
 
   it('POST should return 403 when data to post is invalid', async () => {
-    const createUser = AuthService.prototype.saveUser = jest.fn();
+    const createUser = AuthService.prototype.getUserRegistered = jest.fn();
     createUser.mockImplementation(() => {
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,

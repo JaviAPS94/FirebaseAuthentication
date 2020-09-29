@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../../src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { FirebaseStrategy } from './strategies/firebase.strategy';
+import { AdminFirebaseStrategy } from './strategies/admin-firebase.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { Oauth2Strategy } from './strategies/oauth2.strategy';
 
@@ -20,7 +20,7 @@ import { Oauth2Strategy } from './strategies/oauth2.strategy';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, Oauth2Strategy, JwtStrategy, FirebaseStrategy],
-  exports: [FirebaseStrategy]
+  providers: [AuthService, Oauth2Strategy, JwtStrategy, AdminFirebaseStrategy],
+  exports: [AdminFirebaseStrategy]
 })
 export class AuthModule { }
