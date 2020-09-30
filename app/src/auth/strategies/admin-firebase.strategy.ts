@@ -22,19 +22,23 @@ export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy
   }
 
   async authenticate(req: Request): Promise<void> {
-    const tokenExtractor = ExtractJwt.fromAuthHeaderAsBearerToken();
-    const idToken = tokenExtractor(req);
-    if (!idToken || !req.header("account")) {
-      this.fail(UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
-      return;
-    }
     try {
+      const idToken = await this.extractTokenFromHeader(req);
       const firebaseAdminApp = await this.initializeFirebaseAdminAppByAccount(parseInt(req.header("account")));
       const authentication = await firebaseAdminApp.auth().verifyIdToken(idToken);
       await this.validateDecodedToken(authentication);
+    } catch (error) {
+      this.fail(error, HttpStatus.UNAUTHORIZED);
     }
-    catch (e) {
-      this.fail(e, HttpStatus.UNAUTHORIZED);
+  }
+
+  async extractTokenFromHeader(req: Request) {
+    try {
+      const tokenExtractor = ExtractJwt.fromAuthHeaderAsBearerToken();
+      const idToken = tokenExtractor(req);
+      return idToken;
+    } catch (error) {
+      throw new Error("ExtractTokenFromHeader error: " + error.message);
     }
   }
 
@@ -63,8 +67,7 @@ export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy
       return await connection.findCrendentialByAccountId({
         where: { accountId: `${account}` }
       });
-    }
-    catch (error) {
+    } catch (error) {
       throw new Error("AdminCredentialByAccount Find error: " + error.message);
     }
   }

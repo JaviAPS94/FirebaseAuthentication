@@ -1,6 +1,7 @@
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request } from 'express';
 import * as admin from "firebase-admin";
 import { AuthController } from '../../../../src/auth/auth.controller';
 import { AuthService } from '../../../../src/auth/auth.service';
@@ -76,6 +77,41 @@ describe('Admin firebase Strategy', () => {
     expect(result).toEqual(credentialResult);
   });
 
+  it('should throw error when find admin credential by account fails', async () => {
+    mockFindAdminCredentialByAccountFailure();
+    const accountId = 1;
+    const wrapperService = new EntityManagerWrapperService();
+    expect.assertions(2);
+
+    try {
+      await adminFirebaseStrategy.findAdminCredentialByAccount(accountId, wrapperService);
+    } catch (error) {
+      expect(error.message).toContain('AdminCredentialByAccount Find error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
+  it('should return a firebase token from request', async () => {
+    const mockRequest = <Request>{
+      headers: {
+        authorization: "Bearer test",
+      }
+    };
+    const result = await adminFirebaseStrategy.extractTokenFromHeader(mockRequest);
+    expect(result).toBeDefined();
+  })
+
+  it('should not return a firebase token from request', async () => {
+    //mockExtractTokenFromHeaderFailure();
+    const mockRequest = <Request>{};
+    try {
+      await adminFirebaseStrategy.extractTokenFromHeader(mockRequest);
+    } catch (error) {
+      expect(error.message).toContain('ExtractTokenFromHeader error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  })
+
   const mockFindAdminCredentialByAccount = () => {
     const findAdminCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
     findAdminCredentialByAccount.mockReturnValue(mockFirebase.credentialsResult[0]);
@@ -86,4 +122,13 @@ describe('Admin firebase Strategy', () => {
     findAdminCredentialByAccount.mockReturnValue(admin.apps[0]);
   };
 
+  const mockFindAdminCredentialByAccountFailure = () => {
+    const findAdminCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
+    findAdminCredentialByAccount.mockImplementation(() => { throw new Error('ANY.ERROR') });
+  };
+
+  const mockExtractTokenFromHeaderFailure = () => {
+    const extractTokenFromHeader = AdminFirebaseStrategy.prototype.extractTokenFromHeader = jest.fn();
+    extractTokenFromHeader.mockImplementation(() => { throw new Error('ANY.ERROR') });
+  };
 });
