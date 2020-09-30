@@ -22,7 +22,8 @@ export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy
   }
 
   async authenticate(req: Request): Promise<void> {
-    const idToken = this.extractor(req);
+    const tokenExtractor = ExtractJwt.fromAuthHeaderAsBearerToken();
+    const idToken = tokenExtractor(req);
     if (!idToken || !req.header("account")) {
       this.fail(UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
       return;
@@ -30,7 +31,7 @@ export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy
     try {
       const firebaseAdminApp = await this.initializeFirebaseAdminAppByAccount(parseInt(req.header("account")));
       const authentication = await firebaseAdminApp.auth().verifyIdToken(idToken);
-      await this.validateDecodedIdToken(authentication);
+      await this.validateDecodedToken(authentication);
     }
     catch (e) {
       this.fail(e, HttpStatus.UNAUTHORIZED);
@@ -83,5 +84,15 @@ export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy
     } catch (error) {
       throw new Error("InitializeFirebaseAdminApp error: " + error.message);
     }
+  }
+
+  public async validateDecodedToken(decodedIdToken: FirebaseUser) {
+    const result = await this.validate(decodedIdToken);
+
+    if (result) {
+      this.success(result);
+    }
+
+    this.fail(UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
   }
 }
