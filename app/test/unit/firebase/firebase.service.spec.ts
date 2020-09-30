@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import * as firebase from "firebase";
+import { ADMIN, CLIENT } from '../../../src/constants';
 import { Credential } from '../../../src/entity/Credential';
 import { SignInDto } from '../../../src/firebase/dto/signIn.dto';
 import { FirebaseController } from '../../../src/firebase/firebase.controller';
@@ -74,7 +76,7 @@ describe('FirebaseService', () => {
     const credential = new Credential();
     Object.assign(credential, mockFirebase.credentials[0]);
     const accountId = 1;
-    const result = await firebaseService.initializeFirebaseApp(credential, accountId);
+    const result = await firebaseService.initializeFirebaseApp(credential, accountId, CLIENT);
     expect(result).toBeDefined();
   });
 
@@ -83,7 +85,7 @@ describe('FirebaseService', () => {
     Object.assign(credential, mockFirebase.credentials[1]);
     const accountId = 1;
     try {
-      await firebaseService.initializeFirebaseApp(credential, accountId);
+      await firebaseService.initializeFirebaseApp(credential, accountId, CLIENT);
     } catch (error) {
       expect(error.message).toContain('InitializeFirebaseApp error:');
       expect(error).toBeInstanceOf(Error);
@@ -97,7 +99,7 @@ describe('FirebaseService', () => {
 
     const result = await firebaseService.signIn(signInDto, accountId);
     expect(result).toBeDefined();
-  });
+  }, 30000);
 
   it('should not signIn user in firebase', async () => {
     const accountId = 1;
@@ -112,9 +114,9 @@ describe('FirebaseService', () => {
     }
   });
 
-  const mockFindCredentialByAccount = () => {
-    const findCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
-    findCredentialByAccount.mockReturnValue(mockFirebase.credentialsResult[0]);
+  const mockSignIn = () => {
+    const signIn = FirebaseService.prototype.initializeFirebaseAppByAccount = jest.fn();
+    signIn.mockReturnValue(firebase.app[0]);
   };
 
   const mockCreateCredentialSuccessful = () => {
@@ -133,5 +135,10 @@ describe('FirebaseService', () => {
   const mockFindCredentialByAccountFailure = () => {
     const findCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
     findCredentialByAccount.mockImplementation(() => { throw new Error('ANY.ERROR') });
+  };
+
+  const mockFindCredentialByAccount = () => {
+    const findCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
+    findCredentialByAccount.mockReturnValue(mockFirebase.credentialsResult[0]);
   };
 });

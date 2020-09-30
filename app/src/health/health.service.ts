@@ -10,7 +10,7 @@ export class HealthcheckIndicator extends HealthIndicator {
   async isHealthy(): Promise<HealthIndicatorResult>{
     const isHealthy = this.getHealthcheck()==200;
 
-    const result = this.getStatus("ms-subscriptions",isHealthy);
+    const result = this.getStatus("ms-authentication",isHealthy);
     if (isHealthy){
       return result;
     }

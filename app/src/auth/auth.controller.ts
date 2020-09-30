@@ -8,6 +8,7 @@ import {
   Request,
   UseGuards
 } from '@nestjs/common';
+import { ApiHeader, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UserDto } from './dto/user.dto';
 import { FirebaseAuthGuard } from './guards/firebase.guards';
@@ -35,6 +36,17 @@ export class AuthController {
 
   @UseGuards(FirebaseAuthGuard)
   @Get('firebase-token')
+  @ApiHeader({
+    name: 'authentication',
+    description: 'Bearer token from firebase',
+  })
+  @ApiResponse({
+    status: 200, description: 'The record has been successfully created.', schema: {
+      type: "object", properties: {
+        name: { type: 'string'}
+      }
+    }
+  })
   async validateFirebaseToken(@Request() req) {
     return await req.user;
   }

@@ -38,59 +38,6 @@ describe('Admin firebase Strategy', () => {
     adminFirebaseStrategy = module.get<AdminFirebaseStrategy>(AdminFirebaseStrategy);
   });
 
-  it('should initialize firebase admin app', async () => {
-    const credential = new Credential();
-    Object.assign(credential, mockFirebase.credentials[0]);
-    const accountId = 1;
-    const result = await adminFirebaseStrategy.initializeFirebaseAdminApp(credential, accountId);
-    expect(result).toBeDefined();
-  });
-
-  it('should not initialize firebase admin app', async () => {
-    const credential = new Credential();
-    Object.assign(credential, mockFirebase.credentials[1]);
-    const accountId = 1;
-    try {
-      await adminFirebaseStrategy.initializeFirebaseAdminApp(credential, accountId);
-    } catch (error) {
-      expect(error.message).toContain('InitializeFirebaseAdminApp error:');
-      expect(error).toBeInstanceOf(Error);
-    }
-  });
-
-  it('should return existing firebase admin by account app', async () => {
-    test();
-    const accountId = 1;
-    const result = await adminFirebaseStrategy.initializeFirebaseAdminAppByAccount(accountId);
-    expect(result).toBeDefined();
-  });
-
-  it('should find admin credential by account in db', async () => {
-    mockFindAdminCredentialByAccount();
-    const credentialResult = new Credential();
-    Object.assign(credentialResult, mockFirebase.credentialsResult[0]);
-
-    const accountId = 1;
-    const wrapperService = new EntityManagerWrapperService();
-    const result = await adminFirebaseStrategy.findAdminCredentialByAccount(accountId, wrapperService);
-
-    expect(result).toEqual(credentialResult);
-  });
-
-  it('should throw error when find admin credential by account fails', async () => {
-    mockFindAdminCredentialByAccountFailure();
-    const accountId = 1;
-    const wrapperService = new EntityManagerWrapperService();
-    expect.assertions(2);
-
-    try {
-      await adminFirebaseStrategy.findAdminCredentialByAccount(accountId, wrapperService);
-    } catch (error) {
-      expect(error.message).toContain('AdminCredentialByAccount Find error:');
-      expect(error).toBeInstanceOf(Error);
-    }
-  });
-
   it('should return a firebase token from request', async () => {
     const mockRequest = <Request>{
       headers: {
@@ -102,7 +49,6 @@ describe('Admin firebase Strategy', () => {
   })
 
   it('should not return a firebase token from request', async () => {
-    //mockExtractTokenFromHeaderFailure();
     const mockRequest = <Request>{};
     try {
       await adminFirebaseStrategy.extractTokenFromHeader(mockRequest);
@@ -111,24 +57,4 @@ describe('Admin firebase Strategy', () => {
       expect(error).toBeInstanceOf(Error);
     }
   })
-
-  const mockFindAdminCredentialByAccount = () => {
-    const findAdminCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
-    findAdminCredentialByAccount.mockReturnValue(mockFirebase.credentialsResult[0]);
-  };
-
-  const test = () => {
-    const findAdminCredentialByAccount = AdminFirebaseStrategy.prototype.getFirebaseAdminApp = jest.fn();
-    findAdminCredentialByAccount.mockReturnValue(admin.apps[0]);
-  };
-
-  const mockFindAdminCredentialByAccountFailure = () => {
-    const findAdminCredentialByAccount = EntityManagerWrapperService.prototype.findCrendentialByAccountId = jest.fn();
-    findAdminCredentialByAccount.mockImplementation(() => { throw new Error('ANY.ERROR') });
-  };
-
-  const mockExtractTokenFromHeaderFailure = () => {
-    const extractTokenFromHeader = AdminFirebaseStrategy.prototype.extractTokenFromHeader = jest.fn();
-    extractTokenFromHeader.mockImplementation(() => { throw new Error('ANY.ERROR') });
-  };
 });
