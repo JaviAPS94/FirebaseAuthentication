@@ -1,6 +1,7 @@
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
+import { FirebaseModule } from '../../../../src/firebase/firebase.module';
 import { AuthController } from '../../../../src/auth/auth.controller';
 import { AuthService } from '../../../../src/auth/auth.service';
 import { JwtStrategy } from '../../../../src/auth/strategies/jwt.strategy';
@@ -16,6 +17,7 @@ describe('Oauth Strategy', () => {
       imports: [
         UsersModule,
         PassportModule,
+        FirebaseModule,
         JwtModule.registerAsync({
           useFactory: async () => ({
             secret: process.env.JWT_SECRET_KEY,

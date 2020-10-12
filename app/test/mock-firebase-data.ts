@@ -26,6 +26,15 @@ export const mockFirebase = {
       databaseUrl: "https://inmedical-dev.firebaseio.com",
       apiKey: "AIzaSyBWQ07jhU0iXbz6rXCUp_-vQU7SLvYeHSg",
       authDomain: "inmedical-dev.firebaseapp.com"
+    },
+    {
+      accountId: 60,
+      projectId: "inmedical-dev",
+      privateKey: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCREDi+yd4YCUgk\nZlXDWDiPWHWXp0JcG+Ns9hFnoHDFiET55ljs5Pf0FaNzCkCJvV7tlAmburN/27Rw\n0bF7djDjYga6ym+/+G5VjLIG93pyu7vdAbbGxk2cmBjuuK7yLRId19I/+QsWvv2A\nefWV6DG+b+MyGevvY0hbXjvztFfVy7NSk4dIVJ/X52r6oQWIo0Q6Ycu0aLqurLZF\n7d1YVpxD/RHZfDK//0bf2w/Khr6b5D9LCypX0fMQvFfI7C3mAMm8x67+Mmyc66Xy\nkRJch3+yipuo70gfZKhQ1AvM5/aoiqTYi010SqSY0hf3/ZszG+sHFzcpxWO0gljG\nu7rwNcMXAgMBAAECggEAK74Kfm18zR6vZFp/bgJCO+devjYvanr2XzrsEKVunAH1\nWq29DuIUasPDn8Ltpxs1bsp/AziPO/TSOlrg++ut3kMG6Hh2rhqJmr5sSHGDuOkn\nQwNrTBEsAhZTHlkOV/SDTAByY9wDHf7FjmI4TdXQei5fAhKS9IKppPOLfHdbLRpl\nOTq3hlHgiPIBNDdK7fwUKwyQgIdt/TMAveKVuIc88pykcmktt3A2dEdpoSqn65Hl\nPrYgiOc9zfTiestfho7MTbUq+pRT48qAVm53BsgZgFxsUOBSw7jcfp7JTcT2DGdd\n73L9cSr+XkSD30SMaq0AKieNQybKLMMcTHgQEaJDIQKBgQDLmb7Aw0+ouyBrP1Zt\nILYBD9r+jAayhWnkFj+54s0ry8AXrdr02DIgjIbFI2u8PZj1htCg5nMqLRwBdvI7\n0iDp3dObYKYIIgb17IO7Nv0bbrw+IvN+f05DPlNzDHQLBknIyQpygLLfuD+UVLiq\nHrXbYfa/ih/jO2EwTRu6g2LyTwKBgQC2Zb51acWH2fqN9yIV94yl9z6ZyxaHQlpz\nPyf9inVXXdEotsnJY0gCIA72UE8Yxq5Z2QPn8Wl5xoxbMfShWSYtsWM24UF8ScrA\nb/sVAzKPDzaV71GF2T79hgLJc8LDBI6bJlEK+8Yz52aSaIebnkOrfpQ1DloeDaUs\nUKIlJB7YuQKBgEXdj0ikfPxgokJLLMQr2mjI4RRCRrYR9AFR5TJLcq5Zr6Qwg5dL\nbQAgWMrjWb/xv0BZr9PW4KQTcK3L/FmsxKCb/1YtNyxJSOww6g9fUkGMoUoNQlMh\nKmEGzSoIlvWFheJBorUiFr+QgTjMTcYK3crXdg3KPyEBqlshyqcZGOYfAoGBAI9g\nEwLAjiFn22hU51pVKR4c5/yEg8T3B5qn/otylyKCALP8W0oO3L+u65P7NPHI26yM\nxmFAhyTOSe41qpJaPYSVd+Pf1VYZu2Lho4C07r09vC7H3FFWoAkxmmc4s9QQdPjI\nedQkbXzHXP2hZVeSZKcd7Op3yabuGvRmvc5sQkMhAoGAHgAq6S3vWT+rZvqZkeGw\ngROcajvi6LrYjo/l1woJWWzzArhUFTf7akXlcaTD+wbmrQUT3ghcFQglxAGi6U6p\n4stwUF3efSGXPNLgXTXMt/0Mb95Hmp8x59aJzAD+uWvWPp8VWfLFZ59u7rENkv0t\n5801W1guchiaB+SfmSvtCQ8=\n-----END PRIVATE KEY-----\n",
+      clientEmail: "firebase-adminsdk-9eyz5@inmedical-dev.iam.gserviceaccount.com",
+      databaseUrl: "https://inmedical-dev.firebaseio.com",
+      apiKey: "AIzaSyBWQ07jhU0iXbz6rXCUp_-vQU7SLvYeHSg",
+      authDomain: "inmedical-dev.firebaseapp.com"
     }
   ],
   credentialsResult: [
@@ -59,6 +68,26 @@ export const mockFirebase = {
         "sign_in_provider": "custom"
       },
       "uid": "BVxK3bnY8Md7AEwJklrSToXVDm42"
+    },
+    {
+      "iss": "test",
+      "aud": "test",
+      "auth_time": 1234,
+      "user_id": "test",
+      "sub": "test",
+      "iat": 1324,
+      "exp": 1234,
+      "email": "test@test.com",
+      "email_verified": false,
+      "firebase": {
+        "identities": {
+          "email": [
+            "test@test.com"
+          ]
+        },
+        "sign_in_provider": "test"
+      },
+      "uid": "test"
     }
   ],
   signIn: [
@@ -115,5 +144,33 @@ export const mockFirebase = {
       },
       "operationType": "signIn"
     }
-  ]
+  ],
+  resetPassword: [
+    {
+      passwordResetCode: "test",
+      newPassword: "Test1234@"
+    }
+  ],
+  registerAuthUser: [
+    {
+      email: "test",
+      password: "test1234@"
+    }
+  ],
+  accounts: [
+    {
+      id: 1,
+      name: "test",
+      description: "test",
+      externalId: "1",
+      active: 1
+    }
+  ],
+  changePassword: [
+    {
+      currentPassword: "123456",
+      password: "Test1234@",
+      passwordRewrite: "Test1234@"
+    }
+  ],
 };

@@ -15,7 +15,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 secret:
-  name:
+  name: ""
 configmap:
   name: ""
 serviceAccount:

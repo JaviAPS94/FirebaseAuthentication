@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../../../src/users/users.module';
 import { User } from '../../../src/entity/User';
 import { UserDto } from '../../../src/auth/dto/user.dto';
+import { FirebaseModule } from '../../../src/firebase/firebase.module';
 
 describe('Auth Controller', () => {
   let authController: AuthController;
@@ -19,6 +20,7 @@ describe('Auth Controller', () => {
       imports: [
         UsersModule,
         PassportModule,
+        FirebaseModule,
         JwtModule.registerAsync({
           useFactory: async () => ({
             secret: process.env.JWT_SECRET_KEY,

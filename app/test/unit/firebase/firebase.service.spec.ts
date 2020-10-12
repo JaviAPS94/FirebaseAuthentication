@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as firebase from "firebase";
-import { ADMIN, CLIENT } from '../../../src/constants';
+import { ChangePasswordDto } from '../../../src/firebase/dto/change-password.dto';
+import { AccountModule } from '../../../src/account/account.module';
+import { AccountService } from '../../../src/account/account.service';
+import { CLIENT } from '../../../src/constants';
 import { Credential } from '../../../src/entity/Credential';
+import { RegisterAuthUserDto } from '../../../src/firebase/dto/register-auth-user.dto';
+import { ResetPasswordDto } from '../../../src/firebase/dto/reset-password.dto';
 import { SignInDto } from '../../../src/firebase/dto/signIn.dto';
 import { FirebaseController } from '../../../src/firebase/firebase.controller';
 import { FirebaseService } from '../../../src/firebase/firebase.service';
@@ -15,6 +20,7 @@ describe('FirebaseService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [AccountModule],
       controllers: [FirebaseController],
       exports: [FirebaseService],
       providers: [FirebaseService]
@@ -114,12 +120,76 @@ describe('FirebaseService', () => {
     }
   });
 
+  it('should not reset password in firebase', async () => {
+    const accountId = 1;
+    const resetPasswordDto = new ResetPasswordDto();
+    Object.assign(resetPasswordDto, mockFirebase.resetPassword[0]);
+
+    try {
+      await firebaseService.resetPassword(resetPasswordDto, accountId);
+    } catch (error) {
+      expect(error.message).toContain('ResetPassword error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
+  it('should not change password in firebase', async () => {
+    const accountId = 1;
+    const uid = "uidtest";
+    const changePasswordDto = new ChangePasswordDto();
+    Object.assign(changePasswordDto, mockFirebase.changePassword[0]);
+
+    try {
+      await firebaseService.changePassword(changePasswordDto, accountId, uid);
+    } catch (error) {
+      expect(error.message).toContain('ChangePassword error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
+  it('should register auth user in firebase', async () => {
+    mockSignIn();
+    const accountId = 1;
+    const registerAuthUserDto = new RegisterAuthUserDto();
+    Object.assign(registerAuthUserDto, mockFirebase.registerAuthUser[0]);
+
+    try {
+      await firebaseService.registerAuthUser(registerAuthUserDto, accountId);
+    } catch (error) {
+      expect(error.message).toContain('RegisterAuthUser error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
+  it('should not register token in blacklist', async () => {
+    try {
+      const accountId = 1;
+      await firebaseService.registerTokenInBlackList("Bearer 1234", accountId);
+    } catch (error) {
+      expect(error.message).toContain('RegisterTokenInBlackList error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
+  it('should not delete expired token', async () => {
+    try {
+      const accountId = 1;
+      await firebaseService.deleteExpiredToken(accountId);
+    } catch (error) {
+      expect(error.message).toContain('DeleteExpiredToken error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
   const mockSignIn = () => {
     const signIn = FirebaseService.prototype.initializeFirebaseAppByAccount = jest.fn();
     signIn.mockReturnValue(firebase.app[0]);
   };
 
   const mockCreateCredentialSuccessful = () => {
+    const findAccountById = AccountService.prototype.findById = jest.fn();
+    findAccountById.mockReturnValue(mockFirebase.accounts[0]);
+
     const returnedCrendential = new Credential();
     Object.assign(returnedCrendential, mockFirebase.credentialsResult[0]);
 

@@ -1,11 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-
-type AdditionalInfo = {
-  useExternalIds?: boolean
-}
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Credential } from './Credential';
 
 @Entity()
-export class User {
+export class Account {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,13 +10,13 @@ export class User {
   name: string;
 
   @Column()
-  secret: string;
+  description: string;
 
-  @Column({
-    type: "json",
-    default: null
-  })
-  additionalInfo: AdditionalInfo
+  @Column()
+  externalId: string;
+
+  @Column("tinyint")
+  active: number
 
   @Column(
     {
@@ -41,4 +38,9 @@ export class User {
 
   @Column("timestamp", { nullable: true })
   deleteAt: Date;
+
+  @OneToOne(type => Credential, credential => credential.account, {
+    cascade: true,
+  })
+  credential: Credential;
 }

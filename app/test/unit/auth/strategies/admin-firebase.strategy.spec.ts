@@ -2,16 +2,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Request } from 'express';
-import * as admin from "firebase-admin";
 import { AuthController } from '../../../../src/auth/auth.controller';
 import { AuthService } from '../../../../src/auth/auth.service';
 import { AdminFirebaseStrategy } from '../../../../src/auth/strategies/admin-firebase.strategy';
 import { JwtStrategy } from '../../../../src/auth/strategies/jwt.strategy';
 import { Oauth2Strategy } from '../../../../src/auth/strategies/oauth2.strategy';
-import { Credential } from '../../../../src/entity/Credential';
+import { FirebaseModule } from '../../../../src/firebase/firebase.module';
 import { UsersModule } from '../../../../src/users/users.module';
-import { EntityManagerWrapperService } from '../../../../src/utils/entity-manager-wrapper.service';
-import { mockFirebase } from '../../../mock-firebase-data';
+import * as firebaseAdmin from 'firebase-admin';
+import { ADMIN } from 'src/constants';
 
 jest.mock('../../../../src/utils/entity-manager-wrapper.service');
 
@@ -23,6 +22,7 @@ describe('Admin firebase Strategy', () => {
       imports: [
         UsersModule,
         PassportModule,
+        FirebaseModule,
         JwtModule.registerAsync({
           useFactory: async () => ({
             secret: process.env.JWT_SECRET_KEY,
@@ -54,6 +54,14 @@ describe('Admin firebase Strategy', () => {
       await adminFirebaseStrategy.extractTokenFromHeader(mockRequest);
     } catch (error) {
       expect(error.message).toContain('ExtractTokenFromHeader error:');
+      expect(error).toBeInstanceOf(Error);
+    }
+  })
+
+  it('should throw a error when a token is in a blacklist', async () => {
+    try {
+      await adminFirebaseStrategy.tokenIsBlackListed("test", firebaseAdmin.apps[0]);
+    } catch (error) {
       expect(error).toBeInstanceOf(Error);
     }
   })

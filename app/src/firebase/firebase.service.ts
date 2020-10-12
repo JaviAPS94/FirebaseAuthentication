@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import * as firebase from 'firebase';
 import * as firebaseAdmin from 'firebase-admin';
-import { Credential } from '../../src/entity/Credential';
-import { KrypteringService } from '../../src/utils/kryptering.service';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 import { getManager } from 'typeorm';
+import { AccountService } from '../../src/account/account.service';
+import { ADMIN, CLIENT } from '../../src/constants';
+import { Credential } from '../../src/entity/Credential';
 import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrapper.service';
+import { KrypteringService } from '../../src/utils/kryptering.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialDto } from './dto/credential.dto';
+import { RegisterAuthUserDto } from './dto/register-auth-user.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SignInDto } from './dto/signIn.dto';
-import { CLIENT } from '../../src/constants';
+import { ICreateFirebaseAuthUser } from './interfaces/create-firebase-auth-user.interface';
 
 @Injectable()
 export class FirebaseService {
-  constructor() { }
+  constructor(private readonly accountService: AccountService) { }
 
   public async initializeFirebaseAppByAccount(account: number, firebaseTypeApp: string) {
     const firebaseAppsLength = (firebaseTypeApp === "admin") ? firebaseAdmin.apps.length : firebase.apps.length;
@@ -82,6 +89,77 @@ export class FirebaseService {
     }
   }
 
+  public async resetPassword(resetPasswordDto: ResetPasswordDto, account: number) {
+    try {
+      const app = await this.initializeFirebaseAppByAccount(account, CLIENT) as firebase.app.App;
+      const response = await app.auth().confirmPasswordReset(resetPasswordDto.passwordResetCode, resetPasswordDto.newPassword);
+      return response;
+    }
+    catch (error) {
+      throw new Error("ResetPassword error: " + error.message);
+    }
+  }
+
+  public async changePassword(changePasswordDto: ChangePasswordDto, account: number, uid: string) {
+    try {
+      const app = await this.initializeFirebaseAppByAccount(account, ADMIN) as firebaseAdmin.app.App;
+      const response = await app.auth().updateUser(uid, {
+        password: changePasswordDto.password
+      });
+      return response;
+    }
+    catch (error) {
+      throw new Error("ChangePassword error: " + error.message);
+    }
+  }
+
+  public async registerAuthUser(registerAuthUserDto: RegisterAuthUserDto, account: number) {
+    try {
+      const app = await this.initializeFirebaseAppByAccount(account, ADMIN) as firebaseAdmin.app.App;
+      const iCreateFirebaseAuthUser: ICreateFirebaseAuthUser = {
+        email: registerAuthUserDto.email,
+        emailVerified: false,
+        password: registerAuthUserDto.password,
+        disabled: false
+      }
+      const response = await app.auth().createUser(iCreateFirebaseAuthUser);
+      return response;
+    }
+    catch (error) {
+      throw new Error("RegisterAuthUser error: " + error.message);
+    }
+  }
+
+  public async registerTokenInBlackList(authorization: string, account: number) {
+    try {
+      const idToken = authorization.split('Bearer ')[1];
+      const app = await this.initializeFirebaseAppByAccount(account, ADMIN) as firebaseAdmin.app.App;
+      const decodedToken = await app.auth().verifyIdToken(idToken, true);
+      const { exp: expiredAt } = decodedToken;
+      const recordSaved = await app.database().ref("blacklist/tokens").push({ idToken, expiredAt });
+      return recordSaved.toJSON();
+    }
+    catch (error) {
+      throw new Error("RegisterTokenInBlackList error: " + error.message);
+    }
+  }
+
+  public async deleteExpiredToken(account: number) {
+    try {
+      const app = await this.initializeFirebaseAppByAccount(account, ADMIN) as firebaseAdmin.app.App;
+      const snapshot = await app.database().ref("blacklist/tokens")
+        .orderByChild("expiredAt")
+        .endAt(moment().unix())
+        .once('value');
+      const tokens = {};
+      snapshot.forEach(child => tokens[child.key] = null);
+      await app.database().ref("blacklist/tokens").update(tokens);
+    }
+    catch (error) {
+      throw new Error("DeleteExpiredToken error: " + error.message);
+    }
+  }
+
   async getCrendentialCreated(credential: CredentialDto) {
     const wraperService = new EntityManagerWrapperService(getManager());
     return await this.saveCredential(credential, wraperService);
@@ -94,6 +172,10 @@ export class FirebaseService {
         where: { accountId: `${credential.accountId}` }
       }) ?? new Credential();
       Object.assign(credentialToCreate, credential);
+      const account = await this.accountService.findById(credential.accountId, connection);
+      if (_.isEmpty(account)) {
+        throw new Error('Credential needs a VALID accountId');
+      }
       credentialToCreate.privateKey = await krypteringService.encrypt(credential.privateKey);
       credentialToCreate.apiKey = await krypteringService.encrypt(credential.apiKey);
       return await connection.save(credentialToCreate);

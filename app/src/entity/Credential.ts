@@ -1,12 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Account } from './Account';
 
 @Entity()
 export class Credential {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  accountId: number;
 
   @Column()
   projectId: string;
@@ -26,15 +24,31 @@ export class Credential {
   @Column()
   authDomain: string;
 
-  @CreateDateColumn()
-  createdAt: Date
+  @Column({ nullable: false })
+  accountId: number;
 
-  @UpdateDateColumn()
-  updatedAt: Date
+  @Column(
+    {
+      type: "timestamp",
+      default: () => 'CURRENT_TIMESTAMP',
+      nullable: false
+    }
+  )
+  createdAt: Date;
 
-  @DeleteDateColumn({
-    type: "datetime",
-    default: null
-  })
-  deletedAt: Date
+  @Column(
+    {
+      type: "timestamp",
+      default: () => 'CURRENT_TIMESTAMP',
+      nullable: false
+    }
+  )
+  updateAt: Date;
+
+  @Column("timestamp", { nullable: true })
+  deleteAt: Date;
+
+  @OneToOne(type => Account, account => account.credential)
+  @JoinColumn()
+  account: Account;
 }

@@ -5,27 +5,23 @@ import { Request } from "express";
 import * as admin from 'firebase-admin';
 import { ExtractJwt } from 'passport-jwt';
 import { FirebaseService } from "../../../src/firebase/firebase.service";
-import { ADMIN, UNAUTHORIZED } from '../../constants';
+import { ADMIN } from '../../constants';
 
 @Injectable()
 export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy, 'firebase') {
-  public constructor() {
+  public constructor(private readonly firebaseService: FirebaseService) {
     super({
       extractor: ExtractJwt.fromAuthHeaderAsBearerToken()
     });
   }
 
-  async validate(payload: FirebaseUser): Promise<FirebaseUser> {
-    return payload;
-  }
-
   async authenticate(req: Request): Promise<void> {
     try {
-      const firebaseService = new FirebaseService();
       const idToken = await this.extractTokenFromHeader(req);
-      const firebaseApp = await firebaseService.initializeFirebaseAppByAccount(parseInt(req.header("account")), ADMIN) as admin.app.App;
+      const firebaseApp = await this.firebaseService.initializeFirebaseAppByAccount(parseInt(req.header("account")), ADMIN) as admin.app.App;
       const authentication = await firebaseApp.auth().verifyIdToken(idToken);
-      await this.validateDecodedToken(authentication);
+      await this.tokenIsBlackListed(idToken, firebaseApp);
+      this.success(authentication);
     } catch (error) {
       this.fail(error, HttpStatus.UNAUTHORIZED);
     }
@@ -41,13 +37,12 @@ export class AdminFirebaseStrategy extends PassportStrategy(FirebaseAuthStrategy
     }
   }
 
-  public async validateDecodedToken(decodedIdToken: FirebaseUser) {
-    const result = await this.validate(decodedIdToken);
-
-    if (result) {
-      this.success(result);
+  public async tokenIsBlackListed(idToken: string, firebaseAdminApp: admin.app.App) {
+    const result = await firebaseAdminApp.database().ref("blacklist/tokens").orderByChild("idToken").equalTo(idToken)
+      .once("value");
+    const isBlackListed = (result.numChildren() > 0);
+    if (isBlackListed) {
+      throw new Error("tokenIsBlackListed");
     }
-
-    this.fail(UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
   }
 }

@@ -15,7 +15,7 @@ import { FirebaseAuthGuard } from './guards/firebase.guards';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Oauth2AuthGuard } from './guards/oauth2.guard';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 

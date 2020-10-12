@@ -10,6 +10,7 @@ import { EntityManagerWrapperService } from '../../../src/utils/entity-manager-w
 import { mockUsers } from '../../mock-user-data';
 import { User } from '../../../src/entity/User';
 import { AdminFirebaseStrategy } from '../../../src/auth/strategies/admin-firebase.strategy';
+import { FirebaseModule } from '../../../src/firebase/firebase.module';
 
 jest.mock('../../../src/utils/entity-manager-wrapper.service');
 
@@ -21,6 +22,7 @@ describe('AuthService', () => {
       imports: [
         UsersModule,
         PassportModule,
+        FirebaseModule,
         JwtModule.registerAsync({
           useFactory: async () => ({
             secret: process.env.JWT_SECRET_KEY,
