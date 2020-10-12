@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { FirebaseAuthStrategy, FirebaseUser } from '@tfarras/nestjs-firebase-auth';
+import { FirebaseAuthStrategy } from '@tfarras/nestjs-firebase-auth';
 import { Request } from "express";
 import * as admin from 'firebase-admin';
 import { ExtractJwt } from 'passport-jwt';

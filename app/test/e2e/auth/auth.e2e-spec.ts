@@ -38,7 +38,7 @@ describe('Auth Controller (e2e)', () => {
 
   it('Api Token (GET)', () => {
     const result = request(app.getHttpServer())
-      .get('/auth/token')
+      .get('api/auth/token')
       .set('Authorization', 'bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtZSI6ImlubWVkaWNhbCIsImFkZGl0aW9uYWxJbmZvIjp7ImFjY291bnQiOjEwLCJjb3VudHJ5IjoxLCJ1c2VFeHRlcm5hbElkcyI6dHJ1ZX0sImNyZWF0ZWRBdCI6IjIwMjAtMDgtMDRUMTM6NTU6NDQuNDIzWiIsInVwZGF0ZWRBdCI6IjIwMjAtMDgtMDRUMTM6NTU6NDQuNDIzWiIsImRlbGV0ZWRBdCI6bnVsbCwiaWF0IjoxNjAwNzA5NTMyLCJleHAiOjE2MDA3OTU5MzJ9.BqCzkt7iIOpdEWGmkjqjTDYHJF7uB_Kcr_jLAKs7a7E")
       .expect(HttpStatus.UNAUTHORIZED)
     return result;
@@ -46,7 +46,7 @@ describe('Auth Controller (e2e)', () => {
 
   it('Api User (POST)', () => {
     const result = request(app.getHttpServer())
-      .post('/auth/user').send(mockUsers.usersCreate[0])
+      .post('api/auth/user').send(mockUsers.usersCreate[0])
       .expect(HttpStatus.CREATED)
     return result;
   });
