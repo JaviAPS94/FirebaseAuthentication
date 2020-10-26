@@ -9,6 +9,8 @@ import { Oauth2Strategy } from '../../../src/auth/strategies/oauth2.strategy';
 import { EntityManagerWrapperService } from '../../../src/utils/entity-manager-wrapper.service';
 import { mockUsers } from '../../mock-user-data';
 import { User } from '../../../src/entity/User';
+import { AdminFirebaseStrategy } from '../../../src/auth/strategies/admin-firebase.strategy';
+import { FirebaseModule } from '../../../src/firebase/firebase.module';
 
 jest.mock('../../../src/utils/entity-manager-wrapper.service');
 
@@ -20,6 +22,7 @@ describe('AuthService', () => {
       imports: [
         UsersModule,
         PassportModule,
+        FirebaseModule,
         JwtModule.registerAsync({
           useFactory: async () => ({
             secret: process.env.JWT_SECRET_KEY,
@@ -28,7 +31,7 @@ describe('AuthService', () => {
         })
       ],
       controllers: [AuthController],
-      providers: [AuthService, Oauth2Strategy, JwtStrategy]
+      providers: [AuthService, Oauth2Strategy, JwtStrategy, AdminFirebaseStrategy]
     }).compile();
 
     authService = module.get<AuthService>(AuthService);

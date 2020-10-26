@@ -1,13 +1,13 @@
-import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockUsers } from '../../../mock-user-data';
+import { FirebaseModule } from '../../../../src/firebase/firebase.module';
 import { AuthController } from '../../../../src/auth/auth.controller';
 import { AuthService } from '../../../../src/auth/auth.service';
 import { JwtStrategy } from '../../../../src/auth/strategies/jwt.strategy';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { UsersModule } from '../../../../src/users/users.module';
 import { Oauth2Strategy } from '../../../../src/auth/strategies/oauth2.strategy';
+import { UsersModule } from '../../../../src/users/users.module';
+import { mockUsers } from '../../../mock-user-data';
 
 describe('Oauth Strategy', () => {
   let oauthStrategy: Oauth2Strategy;
@@ -17,6 +17,7 @@ describe('Oauth Strategy', () => {
       imports: [
         UsersModule,
         PassportModule,
+        FirebaseModule,
         JwtModule.registerAsync({
           useFactory: async () => ({
             secret: process.env.JWT_SECRET_KEY,

@@ -41,6 +41,7 @@ lerna-debug.log*
 #envs
 /local/db-connection.env
 /local/db-secrets.env
+/local/run-app.env
 
 #docker files
 ecommerce-ms-authentication.docker
