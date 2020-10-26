@@ -10,7 +10,6 @@ import { ApiResponse } from '@nestjs/swagger';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialDto } from './dto/credential.dto';
 import { CredentialResponseDto } from './dto/crendential-response.dto';
-import { RegisterAuthUserWithPhoneNumberDto } from './dto/register-auth-user-phone-number';
 import { RegisterAuthUserDto } from './dto/register-auth-user.dto';
 import { RegisterFirebaseUserResponseDto } from './dto/register-firebase-user-response.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
@@ -113,22 +112,6 @@ export class FirebaseController {
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
         error: 'An error ocurred register token in blacklist: ' + error.message,
-      }, HttpStatus.FORBIDDEN);
-    }
-  }
-
-  @Post('phone-number')
-  @ApiResponse({
-    status: 201, description: 'Register with phone number has been successfully.', type: RegisterFirebaseUserResponseDto
-  })
-  async registerAuthUserWithPhoneNUmber(@Body() registerAuthUserWithPhoneNumberDto: RegisterAuthUserWithPhoneNumberDto, @Headers('account') account: number) {
-    try {
-      return await this.firebaseService.registerAuthUserWithPhoneNumber(registerAuthUserWithPhoneNumberDto, account);
-    }
-    catch (error) {
-      throw new HttpException({
-        status: HttpStatus.FORBIDDEN,
-        error: 'An error ocurred register auth user with phone number: ' + error.message,
       }, HttpStatus.FORBIDDEN);
     }
   }
