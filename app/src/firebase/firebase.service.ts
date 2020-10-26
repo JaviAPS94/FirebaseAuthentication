@@ -11,6 +11,7 @@ import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrap
 import { KrypteringService } from '../../src/utils/kryptering.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialDto } from './dto/credential.dto';
+import { RegisterAuthUserWithPhoneNumberDto } from './dto/register-auth-user-phone-number';
 import { RegisterAuthUserDto } from './dto/register-auth-user.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SignInDto } from './dto/signIn.dto';

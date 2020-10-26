@@ -15,9 +15,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 secret:
-  name: ""
+  name: "secret"
 configmap:
-  name: ""
+  name: "configmap-authentication"
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

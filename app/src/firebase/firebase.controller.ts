@@ -6,10 +6,15 @@ import {
   HttpStatus,
   Post
 } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialDto } from './dto/credential.dto';
+import { CredentialResponseDto } from './dto/crendential-response.dto';
+import { RegisterAuthUserWithPhoneNumberDto } from './dto/register-auth-user-phone-number';
 import { RegisterAuthUserDto } from './dto/register-auth-user.dto';
+import { RegisterFirebaseUserResponseDto } from './dto/register-firebase-user-response.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SignInResponseDto } from './dto/signIn-response.dto';
 import { SignInDto } from './dto/signIn.dto';
 import { FirebaseService } from './firebase.service';
 
@@ -18,6 +23,9 @@ export class FirebaseController {
   constructor(private readonly firebaseService: FirebaseService) { }
 
   @Post('firebase-credential')
+  @ApiResponse({
+    status: 201, description: 'Credential has been successfully created.', type: CredentialResponseDto
+  })
   async createFirebaseCredential(@Body() credential: CredentialDto) {
     try {
       return await this.firebaseService.getCrendentialCreated(credential);
@@ -31,6 +39,9 @@ export class FirebaseController {
   }
 
   @Post('signIn')
+  @ApiResponse({
+    status: 201, description: 'SignIn has been successfully.', type: SignInResponseDto
+  })
   async signIn(@Body() signInDto: SignInDto, @Headers('account') account: number) {
     try {
       return await this.firebaseService.signIn(signInDto, account);
@@ -57,6 +68,9 @@ export class FirebaseController {
   }
 
   @Post('register')
+  @ApiResponse({
+    status: 201, description: 'Register has been successfully.', type: RegisterFirebaseUserResponseDto
+  })
   async registerAuthUser(@Body() registerAuthUserDto: RegisterAuthUserDto, @Headers('account') account: number) {
     try {
       return await this.firebaseService.registerAuthUser(registerAuthUserDto, account);
@@ -70,6 +84,9 @@ export class FirebaseController {
   }
 
   @Post('changePassword')
+  @ApiResponse({
+    status: 201, description: 'Change password has been successfully.', type: RegisterFirebaseUserResponseDto
+  })
   async changePassword(@Body() changePasswordDto: ChangePasswordDto, @Headers('account') account: number, @Headers('uid') uid: string) {
     try {
       return await this.firebaseService.changePassword(changePasswordDto, account, uid);
@@ -83,6 +100,11 @@ export class FirebaseController {
   }
 
   @Post('blackList/token')
+  @ApiResponse({
+    status: 201, description: 'Token has been successfully registered in black list.', schema: {
+      type: "string"
+    }
+  })
   async registerTokenInBlackList(@Headers('authorization') authorization: string, @Headers('account') account: number) {
     try {
       return await this.firebaseService.registerTokenInBlackList(authorization, account);
@@ -91,6 +113,22 @@ export class FirebaseController {
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
         error: 'An error ocurred register token in blacklist: ' + error.message,
+      }, HttpStatus.FORBIDDEN);
+    }
+  }
+
+  @Post('phone-number')
+  @ApiResponse({
+    status: 201, description: 'Register with phone number has been successfully.', type: RegisterFirebaseUserResponseDto
+  })
+  async registerAuthUserWithPhoneNUmber(@Body() registerAuthUserWithPhoneNumberDto: RegisterAuthUserWithPhoneNumberDto, @Headers('account') account: number) {
+    try {
+      return await this.firebaseService.registerAuthUserWithPhoneNumber(registerAuthUserWithPhoneNumberDto, account);
+    }
+    catch (error) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'An error ocurred register auth user with phone number: ' + error.message,
       }, HttpStatus.FORBIDDEN);
     }
   }
