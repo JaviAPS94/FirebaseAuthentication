@@ -11,6 +11,7 @@ import { EntityManagerWrapperService } from '../../src/utils/entity-manager-wrap
 import { KrypteringService } from '../../src/utils/kryptering.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialDto } from './dto/credential.dto';
+import { MergeUserDto } from './dto/merge-cledentials.dto';
 import { RegisterAuthUserDto } from './dto/register-auth-user.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SignInDto } from './dto/signIn.dto';
@@ -183,6 +184,19 @@ export class FirebaseService {
     catch (error) {
       console.log("ERROR: Create Credential Database Error: " + error.message);
       throw new Error("Create Credential Database Error: " + error.message);
+    }
+  }
+
+  public async mergeUser(mergeUserDto: MergeUserDto, account: number, uid: string) {
+    try {
+      const app = await this.initializeFirebaseAppByAccount(account, ADMIN) as firebaseAdmin.app.App;
+      await app.auth().deleteUser(uid);
+      const response = await app.auth().updateUser(mergeUserDto.mergeUid, { phoneNumber: mergeUserDto.phone });
+      
+      return response;
+    }
+    catch (error) {
+      throw new Error("Merge user error: " + error.message);
     }
   }
 }
