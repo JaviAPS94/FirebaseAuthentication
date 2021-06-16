@@ -190,8 +190,8 @@ export class FirebaseService {
   public async mergeUser(mergeUserDto: MergeUserDto, account: number, uid: string) {
     try {
       const app = await this.initializeFirebaseAppByAccount(account, ADMIN) as firebaseAdmin.app.App;
-      const response = await app.auth().updateUser(mergeUserDto.mergeUid, { phoneNumber: mergeUserDto.phone });
       await app.auth().deleteUser(uid);
+      const response = await app.auth().updateUser(mergeUserDto.mergeUid, { phoneNumber: mergeUserDto.phone });
       
       return response;
     }
