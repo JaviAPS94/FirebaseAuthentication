@@ -10,6 +10,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialDto } from './dto/credential.dto';
 import { CredentialResponseDto } from './dto/crendential-response.dto';
+import { MergeUserDto } from './dto/merge-cledentials.dto';
 import { RegisterAuthUserDto } from './dto/register-auth-user.dto';
 import { RegisterFirebaseUserResponseDto } from './dto/register-firebase-user-response.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
@@ -94,6 +95,22 @@ export class FirebaseController {
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
         error: 'An error ocurred change user password: ' + error.message,
+      }, HttpStatus.FORBIDDEN);
+    }
+  }
+  
+  @Post('mergeUser')
+  @ApiResponse({
+    status: 201, description: 'Merge has been successfully.', type: RegisterFirebaseUserResponseDto
+  })
+  async mergeUser(@Body() mergeUserDto: MergeUserDto, @Headers('account') account: number, @Headers('uid') uid: string) {
+    try {
+      return await this.firebaseService.mergeUser(mergeUserDto, account, uid);
+    }
+    catch (error) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'An error ocurred on merge user: ' + error.message,
       }, HttpStatus.FORBIDDEN);
     }
   }
