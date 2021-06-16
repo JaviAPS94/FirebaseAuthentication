@@ -4,7 +4,8 @@ import {
   Headers,
   HttpException,
   HttpStatus,
-  Post
+  Post,
+  Put
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -99,9 +100,9 @@ export class FirebaseController {
     }
   }
   
-  @Post('mergeUser')
+  @Put('mergeUser')
   @ApiResponse({
-    status: 201, description: 'Merge has been successfully.', type: RegisterFirebaseUserResponseDto
+    status: 201, description: 'Merge has been successfully.'
   })
   async mergeUser(@Body() mergeUserDto: MergeUserDto, @Headers('account') account: number, @Headers('uid') uid: string) {
     try {
